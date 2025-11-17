@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,11 +13,33 @@ public class Enemy : MonoBehaviour
     public float stoppingDistance = 1.5f;
 
 	private Rigidbody rb;
+	private Animator anim;
+	private string sceneName;
+
+	public Vector3 spawnPoint = new Vector3(21f, 0f, 0f);
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+		anim = GetComponentInChildren<Animator>();
+
+		sceneName = SceneManager.GetActiveScene().name;
+
+		switch (sceneName)
+        {
+            case "Scene1":
+                break;
+
+            case "Scene2":
+                break;
+
+            case "Scene3":
+                gameObject.SetActive(false);
+				speed = 5;
+                break;
+        }
     }
+
     
 	private void FixedUpdate()
     {
@@ -64,6 +87,35 @@ public class Enemy : MonoBehaviour
     {
         currentState = newState;
         Debug.Log("Enemy state changed to: " + newState);
+		
+		if (anim != null)
+		{
+			anim.SetBool("IsWalking", newState == EnemyState.Follow);
+		}
+
+		switch (sceneName)
+		{
+            case "Scene1":
+                if (newState == EnemyState.Follow)
+                {
+                    gameObject.SetActive(false);
+                }
+                break;
+
+            case "Scene2":
+                break;
+
+            case "Scene3":
+                if (newState == EnemyState.Follow)
+                {
+                    if (spawnPoint != null)
+                    {
+                        transform.position = spawnPoint;
+                        gameObject.SetActive(true);
+                    }
+                }
+                break;
+		}
     }
 
 }
