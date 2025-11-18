@@ -18,6 +18,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 moveInput;
 
+	void Awake()
+	{
+		DontDestroyOnLoad(gameObject);
+	}
+
     void Start()
     {
         controller = GetComponent<CharacterController>();

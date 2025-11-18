@@ -1,8 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+
 public class Inventory : MonoBehaviour
 {
-    public Enemy enemy;
+
     public List<string> inventory = new List<string>();
 
 	public bool HasItem(string itemName)
@@ -14,7 +16,12 @@ public class Inventory : MonoBehaviour
     {
         inventory.Add(itemName);
         Debug.Log(itemName + " added to inventory!");
-        enemy.SetState(Enemy.EnemyState.Follow);
+
+		Enemy sceneEnemy = GetEnemyInScene();
+    	if (sceneEnemy != null)
+    	{
+        	sceneEnemy.SetState(Enemy.EnemyState.Follow);
+    	}
     }
 
  	public void RemoveItem(string itemName)
@@ -29,7 +36,13 @@ public class Inventory : MonoBehaviour
 		{
 			Debug.Log(item); 
 		}
-		
+	}
 
+	private Enemy GetEnemyInScene()
+	{
+		Enemy sceneEnemy = FindFirstObjectByType<Enemy>();
+		if (sceneEnemy == null)
+        	Debug.LogWarning("No Enemy found in the current scene!");
+    	return sceneEnemy;
 	}
 }

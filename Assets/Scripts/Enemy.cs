@@ -6,60 +6,48 @@ public class Enemy : MonoBehaviour
 	public enum EnemyState {Idle, Follow};
 	public EnemyState currentState = EnemyState.Idle;
 
-    public Transform player;       
+    private GameObject player;    
+	private Rigidbody rb;
+	private Animator anim;
+	private string sceneName;   
 
 	public float rotationSpeed = 1f;
     public float speed = 0.5f;       
     public float stoppingDistance = 1.5f;
 
-	private Rigidbody rb;
-	private Animator anim;
-	private string sceneName;
-
-	public Vector3 spawnPoint = new Vector3(21f, 0f, 0f);
+	public Vector3 scene3SpawnPoint = new Vector3(-12f, 0f, -16f);
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 		anim = GetComponentInChildren<Animator>();
-
+		player = GameObject.FindGameObjectWithTag("Player");
 		sceneName = SceneManager.GetActiveScene().name;
 
-		switch (sceneName)
-        {
-            case "Scene1":
-                break;
-
-            case "Scene2":
-                break;
-
-            case "Scene3":
-                gameObject.SetActive(false);
-				speed = 5;
-                break;
-        }
+    	if (sceneName == "Scene3")
+    	{
+        	transform.position = scene3SpawnPoint;
+            SetState(EnemyState.Idle);
+    	}
     }
-
     
 	private void FixedUpdate()
     {
 		if (player == null) return;
 
-        switch (currentState)
+        if (currentState == EnemyState.Follow)
         {
-            case EnemyState.Idle:
-                LookAtPlayer();
-                break;
-
-            case EnemyState.Follow:
-                FollowPlayer();
-                break;
+            FollowPlayer();
+        }
+        else
+        {
+            LookAtPlayer(); 
         }
     }
     
 	void LookAtPlayer()
     {
-        Vector3 direction = player.position - transform.position;
+        Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
         if (direction.sqrMagnitude > 0.001f)
         {
@@ -71,7 +59,7 @@ public class Enemy : MonoBehaviour
 	void FollowPlayer()
 	{
 		LookAtPlayer();
-        Vector3 direction = player.position - transform.position;
+        Vector3 direction = player.transform.position - transform.position;
         direction.y = 0; 
 
         float distance = direction.magnitude;
@@ -86,7 +74,6 @@ public class Enemy : MonoBehaviour
 	public void SetState(EnemyState newState)
     {
         currentState = newState;
-        Debug.Log("Enemy state changed to: " + newState);
 		
 		if (anim != null)
 		{
@@ -103,16 +90,22 @@ public class Enemy : MonoBehaviour
                 break;
 
             case "Scene2":
+				AudioManager.Instance.Play("Lights Flickering");
+				if (newState == EnemyState.Follow)
+                {
+                    AudioManager.Instance.Play("First Chase");
+					AudioManager.Instance.Play("Enemy Footsteps");
+                }
                 break;
 
             case "Scene3":
+				AudioManager.Instance.Play("Lights Flickering");
                 if (newState == EnemyState.Follow)
                 {
-                    if (spawnPoint != null)
-                    {
-                        transform.position = spawnPoint;
-                        gameObject.SetActive(true);
-                    }
+                    transform.position = scene3SpawnPoint;
+					speed = 7f;
+                    gameObject.SetActive(true);
+					AudioManager.Instance.Play("Final Chase");
                 }
                 break;
 		}

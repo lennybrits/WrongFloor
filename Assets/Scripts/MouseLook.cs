@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody; // The player capsule to rotate horizontally
+    private Transform playerBody; // The player capsule to rotate horizontally
     public float sensX = 1000f;
     public float sensY = 200f;
 
@@ -15,6 +15,12 @@ public class MouseLook : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+		playerBody = GameObject.FindGameObjectWithTag("Player").transform;
+
+    	Vector3 e = transform.localEulerAngles;
+    	xRotation = e.x;
+    	yRotation = e.y - 90;
     }
 
     void Update()
