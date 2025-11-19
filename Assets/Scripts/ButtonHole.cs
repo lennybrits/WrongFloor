@@ -4,7 +4,7 @@ public class ButtonHole : MonoBehaviour
 {
     private GameObject player;
     public string itemName = "Button1"; 
-    public float minDistance = 100f;
+    public float minDistance = 10f;
 
     public Item buttonToSpawn;
 
@@ -17,7 +17,7 @@ public class ButtonHole : MonoBehaviour
     {
         Inventory inventory = player.GetComponent<Inventory>();
         inventory.CheckInventory();
-        if (inventory.HasItem(itemName))
+        if (inventory.HasItem("Button1"))
         {
             buttonToSpawn.SpawnButtonInElevator(transform.position);
             Debug.Log("placed");

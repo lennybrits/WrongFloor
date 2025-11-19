@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
@@ -10,7 +11,7 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton (only one AudioManager allowed)
+        // Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -18,9 +19,8 @@ public class AudioManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        
 
-        // Initialize each sound
+        // Initialize sounds
         foreach (Sound s in sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
@@ -30,7 +30,35 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
     }
-    
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Play specific sounds based on scene
+        switch (scene.name)
+        {
+			case "Scene1":
+				Stop("Final Chase");
+				Stop("Lights Flickering");
+				break;
+            case "Scene2":
+                Play("Lights Flickering");
+                break;
+            case "Scene3":
+                Play("Lights Flickering");
+                break;
+        }
+    }
+
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
@@ -49,4 +77,3 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
 }
-

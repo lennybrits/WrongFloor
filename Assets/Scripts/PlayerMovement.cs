@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -8,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
 	public float sprintSpeed = 10f;
 
     public float gravity = -9.81f;
-    public float jumpHeight = 1f;
+	public Vector3 spawnPoint = new Vector3(31.3f, 2.56f, -0.31f);
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -20,13 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
 	void Awake()
 	{
-		DontDestroyOnLoad(gameObject);
+		controller = GetComponent<CharacterController>();
 	}
-
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-    }
 
     // This will be called automatically by Player Input when Move is performed
     void OnMove(InputValue value)
@@ -36,13 +33,11 @@ public class PlayerMovement : MonoBehaviour
 
 	void OnSprint(InputValue value)
 	{
-		bool sprintPressed = value.isPressed;
-		isSprinting = sprintPressed;
+		isSprinting = value.isPressed;
 	}
 
     void Update()
     {
-        // Ground check
         isGrounded = controller.isGrounded;
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
@@ -58,11 +53,13 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
+	private void OnCollisionEnter(Collision collision)
+	{
+    	if (collision.gameObject.CompareTag("Enemy"))
+    	{
+        	FindFirstObjectByType<JumpscareController>().PlayJumpscare();
+    	}
+	}
 
-    // Called automatically when Jump is pressed
-    void OnJump(InputValue value)
-    {
-        if (isGrounded)
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-    }
+
 }

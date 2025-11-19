@@ -59,16 +59,16 @@ public class Enemy : MonoBehaviour
 	void FollowPlayer()
 	{
 		LookAtPlayer();
-        Vector3 direction = player.transform.position - transform.position;
-        direction.y = 0; 
+		Vector3 direction = player.transform.position - transform.position;
+		direction.y = 0;
 
-        float distance = direction.magnitude;
+		float distance = direction.magnitude;
 
-        if (distance > stoppingDistance)
-        {
+		if (distance > stoppingDistance)
+		{
 			Vector3 move = direction.normalized * speed * Time.fixedDeltaTime;
 			rb.MovePosition(rb.position + move);
-        }
+		}
 	}
 
 	public void SetState(EnemyState newState)
@@ -90,7 +90,6 @@ public class Enemy : MonoBehaviour
                 break;
 
             case "Scene2":
-				AudioManager.Instance.Play("Lights Flickering");
 				if (newState == EnemyState.Follow)
                 {
                     AudioManager.Instance.Play("First Chase");
@@ -99,11 +98,10 @@ public class Enemy : MonoBehaviour
                 break;
 
             case "Scene3":
-				AudioManager.Instance.Play("Lights Flickering");
                 if (newState == EnemyState.Follow)
                 {
                     transform.position = scene3SpawnPoint;
-					speed = 7f;
+					speed = 4f;
                     gameObject.SetActive(true);
 					AudioManager.Instance.Play("Final Chase");
                 }

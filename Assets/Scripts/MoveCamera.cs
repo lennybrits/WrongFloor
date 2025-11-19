@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MoveCamera : MonoBehaviour
 {
@@ -16,5 +17,20 @@ public class MoveCamera : MonoBehaviour
     {
         if (player != null)
             transform.position = player.position + cameraOffset;
+    }
+
+	void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 }

@@ -4,7 +4,7 @@ public class Cabinet : MonoBehaviour
 {
 	private GameObject player;
 	private Animator animator;
-	public float minimumDistance = 100f;
+	public float minimumDistance = 5f;
 
 	void Start()
 	{
@@ -12,12 +12,10 @@ public class Cabinet : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player");
 	}
 
-    public void HandleClick()
+    public void OnMouseDown()
     {
 		Transform playerDistance = player.transform;
-		Debug.Log("clicked.");
 		bool cabinetDoorsOpen = animator.GetBool("CabinetDoorsOpen");
-		Debug.Log(cabinetDoorsOpen);
 		float distance = Vector3.Distance(playerDistance.position, transform.position);
 		Debug.Log(distance + "," + minimumDistance);
         if (distance <= minimumDistance && cabinetDoorsOpen == false)

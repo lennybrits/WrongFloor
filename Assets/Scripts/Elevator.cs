@@ -23,6 +23,7 @@ public class Elevator : MonoBehaviour
     {
         animator.SetBool("ToOpen", false);
 		AudioManager.Instance.Play("Elevator Doors Close");
+		AudioManager.Instance.Play("Elevator Moving");
     }
 
     public void OpenDoors()
