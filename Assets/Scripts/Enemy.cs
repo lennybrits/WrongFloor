@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 	private Animator anim;
 	private string sceneName;   
 
-	public float rotationSpeed = 1f;
+	public float rotationSpeed = 2f;
     public float speed = 0.5f;       
     public float stoppingDistance = 1.5f;
 

@@ -20,7 +20,6 @@ public class ButtonHole : MonoBehaviour
         if (inventory.HasItem("Button1"))
         {
             buttonToSpawn.SpawnButtonInElevator(transform.position);
-            Debug.Log("placed");
         }
     }
 }

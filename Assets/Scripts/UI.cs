@@ -1,25 +1,47 @@
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
-    [SerializeField] private GameObject player; // Assign your player GameObject in the inspector
+    public GameObject mainPanel;
+    public GameObject instructionsPanel;
 
-    void Start()
+	void Start()
+	{
+		ShowMain();
+	}
+
+    public void ShowInstructions()
     {
-        // Freeze player or disable movement at start
-        if (player != null)
-            player.SetActive(false);
+        mainPanel.SetActive(false);
+        instructionsPanel.SetActive(true);
     }
 
-    // Called by button OnClick
-    public void OnStartButtonPressed()
+    public void ShowMain()
     {
-        if (player != null)
-            player.SetActive(true);
-
-        // Disable the start screen
-        gameObject.SetActive(false);
+        instructionsPanel.SetActive(false);
+        mainPanel.SetActive(true);
     }
+
+	public void StartGame()
+    {
+        SceneManager.LoadScene("Scene1");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+
+		#if UNITY_EDITOR
+        	UnityEditor.EditorApplication.isPlaying = false;
+		#endif
+    }
+
+	public void BackToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+	
 }
 

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Elevator : MonoBehaviour
 {
-
     private Animator animator;
 
     void Start()
@@ -10,13 +9,6 @@ public class Elevator : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.SetBool("ToOpen", true);
 		AudioManager.Instance.Play("Elevator Doors Close");
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void CloseDoors()
@@ -30,6 +22,5 @@ public class Elevator : MonoBehaviour
     {
         animator.SetBool("ToOpen", true);
 		AudioManager.Instance.Play("ElevatorDoorsOpen");
-		Debug.Log("door open sound");
     }
 }

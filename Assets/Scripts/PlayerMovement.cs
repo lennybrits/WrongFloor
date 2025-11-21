@@ -1,40 +1,43 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Video;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public float walkSpeed = 5f;
-	public float sprintSpeed = 10f;
-
+    public float sprintSpeed = 12f;
     public float gravity = -9.81f;
-	public Vector3 spawnPoint = new Vector3(31.3f, 2.56f, -0.31f);
+
+    [Header("References")]
+    public Animator animator;          
+    public Transform playerCamera;    
 
     private CharacterController controller;
     private Vector3 velocity;
     private bool isGrounded;
-
-	private bool isSprinting;
+    private bool isSprinting;
 
     private Vector2 moveInput;
 
-	void Awake()
-	{
-		controller = GetComponent<CharacterController>();
-	}
+    void Awake()
+    {
+        controller = GetComponent<CharacterController>();
 
-    // This will be called automatically by Player Input when Move is performed
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+    }
+
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
     }
 
-	void OnSprint(InputValue value)
-	{
-		isSprinting = value.isPressed;
-	}
+    void OnSprint(InputValue value)
+    {
+        isSprinting = value.isPressed;
+    }
 
     void Update()
     {
@@ -42,24 +45,31 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
-		float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+        Vector3 forward = playerCamera ? Vector3.ProjectOnPlane(playerCamera.forward, Vector3.up).normalized : transform.forward;
+        Vector3 right = playerCamera ? Vector3.ProjectOnPlane(playerCamera.right, Vector3.up).normalized : transform.right;
 
-        // Movement
-        Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
+        Vector3 move = forward * moveInput.y + right * moveInput.x;
+        float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+
         controller.Move(move * currentSpeed * Time.deltaTime);
 
-        // Gravity
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        bool isMoving = move.magnitude > 0.1f;
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", isMoving);
+            animator.SetBool("isSprinting", isSprinting && isMoving);
+        }
+        
     }
 
-	private void OnCollisionEnter(Collision collision)
-	{
-    	if (collision.gameObject.CompareTag("Enemy"))
-    	{
-        	FindFirstObjectByType<JumpscareController>().PlayJumpscare();
-    	}
-	}
-
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            FindFirstObjectByType<JumpscareController>()?.PlayJumpscare();
+        }
+    }
 }

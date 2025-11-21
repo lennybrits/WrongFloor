@@ -8,7 +8,6 @@ public class JumpscareController : MonoBehaviour
     public VideoPlayer videoPlayer;
     private bool isPlaying = false;
 
-
     void Start()
     {
         jumpscareCanvas.SetActive(true);

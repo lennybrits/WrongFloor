@@ -1,36 +1,18 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class MoveCamera : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
-	private Transform player;
-    public Vector3 cameraOffset = new Vector3(0, 2.5f, 0f); // height & distance
-
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if (player == null)
-            Debug.LogError("No player found with tag 'Player'!");
-    }
+    public Transform cameraAnchor;  // assign the player's head/anchor in Inspector
 
     void LateUpdate()
     {
-        if (player != null)
-            transform.position = player.position + cameraOffset;
-    }
-
-	void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (cameraAnchor != null)
+        {
+            // Position the camera exactly at the anchor
+            transform.position = cameraAnchor.position;
+			Vector3 euler = transform.eulerAngles;
+            transform.rotation = Quaternion.Euler(euler.x, cameraAnchor.eulerAngles.y, euler.z);
+            // Rotation is controlled by MouseLook, so don't overwrite it here
+        }
     }
 }

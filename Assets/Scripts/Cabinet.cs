@@ -21,7 +21,6 @@ public class Cabinet : MonoBehaviour
         if (distance <= minimumDistance && cabinetDoorsOpen == false)
         {
             animator.SetBool("CabinetDoorsOpen", true);
-			Debug.Log("opened");
 			AudioManager.Instance.Play("Cabinet Doors Open");
         }
 
@@ -29,7 +28,6 @@ public class Cabinet : MonoBehaviour
 		{
 			animator.SetBool("CabinetDoorsOpen", false);
 			AudioManager.Instance.Play("Cabinet Doors Close");
-			Debug.Log("closed");
 		}
     }
 }

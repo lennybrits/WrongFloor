@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    private Transform playerBody; // The player capsule to rotate horizontally
+    private Transform playerBody; 
     public float sensX = 1000f;
     public float sensY = 200f;
 
@@ -20,7 +20,7 @@ public class MouseLook : MonoBehaviour
 
     	Vector3 e = transform.localEulerAngles;
     	xRotation = e.x;
-    	yRotation = e.y - 90;
+    	yRotation = playerBody.eulerAngles.y;
     }
 
     void Update()
@@ -29,15 +29,15 @@ public class MouseLook : MonoBehaviour
         float mouseY = Input.GetAxisRaw("Mouse Y") * sensY * Time.deltaTime;
 
         yRotation += mouseX;
+		playerBody.rotation = Quaternion.Euler(0f, yRotation, 0f);
         xRotation -= mouseY;
         
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        playerBody.rotation = Quaternion.Euler(0, yRotation, 0f);
+        
         
     }
 
-    // Called automatically by Player Input if using Send Messages behavior
     public void OnLook(InputValue value)
     {
         lookInput = value.Get<Vector2>();
